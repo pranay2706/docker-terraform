@@ -56,8 +56,20 @@ jobs:
           echo "Fetching EC2 instance details..."
           INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=ReactAppInstance" --query "Reservations[*].Instances[*].InstanceId" --output text)
           echo "Instance ID: $INSTANCE_ID"
+          
+          if [ "$INSTANCE_ID" == "None" ]; then
+            echo "No instances found with the specified tag."
+            exit 1
+          fi
+
           PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
           echo "Public IP: $PUBLIC_IP"
+          
+          if [ "$PUBLIC_IP" == "None" ]; then
+            echo "No public IP found for the instance."
+            exit 1
+          fi
+
           echo "EC2_PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
 
       - name: SSH into EC2 and deploy
