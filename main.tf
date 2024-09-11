@@ -1,7 +1,5 @@
-# main.tf
-
 provider "aws" {
-  region = "us-east-1" 
+  region = "us-east-1"
 }
 
 resource "aws_security_group" "allow_all" {
@@ -24,12 +22,11 @@ resource "aws_security_group" "allow_all" {
 }
 
 resource "aws_instance" "react_app" {
-  ami           = "ami-0182f373e66f89c85"
+  ami           = "ami-0182f373e66f89c85" 
   instance_type = "t2.micro"
 
-  key_name = "terraform" 
-
-  security_groups = [aws_security_group.allow_http_ssh.name]
+  key_name = "terraform"
+  security_groups = [aws_security_group.terraform] 
 
   tags = {
     Name = "ReactAppInstance"
@@ -44,4 +41,8 @@ resource "aws_instance" "react_app" {
               docker pull your-docker-username/reacts-app:latest
               docker run -d -p 3000:5173 your-docker-username/reacts-app:latest
               EOF
+}
+
+output "instance_public_ip" {
+  value = aws_instance.react_app.public_ip
 }
