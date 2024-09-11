@@ -1,4 +1,4 @@
-name: Node.js CI and Deploy
+name: Node.js CI and Deploy on docker hub
 
 on:
   push:
@@ -35,5 +35,5 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/reacts-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/react-app:${{ env.VERSION }}
-            ${{ secrets.DOCKER_USERNAME }}/react-app:${{ env.BUILD_NUMBER }}
+            ${{ secrets.DOCKER_USERNAME }}/reacts-app:${{ env.VERSION }}
+            ${{ secrets.DOCKER_USERNAME }}/reacts-app:${{ env.BUILD_NUMBER }}
