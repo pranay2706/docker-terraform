@@ -50,30 +50,15 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Retrieve EC2 Instance ID
-        id: ec2_instance_id
-        run: |
-          INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=ReactAppInstance" --query "Reservations[*].Instances[*].InstanceId" --output text)
-          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
-        continue-on-error: true # To ensure the workflow continues even if this step fails
-
       - name: Retrieve EC2 Public IP
         id: ec2_ip
         run: |
-          if [ -z "${{ env.INSTANCE_ID }}" ]; then
-            echo "EC2 instance not found. Exiting."
-            exit 1
-          fi
-          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.INSTANCE_ID }} --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+          echo "Fetching EC2 instance details..."
+          INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=ReactAppInstance" --query "Reservations[*].Instances[*].InstanceId" --output text)
+          echo "Instance ID: $INSTANCE_ID"
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+          echo "Public IP: $PUBLIC_IP"
           echo "EC2_PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
-
-      - name: Verify SSH Access
-        run: |
-          if [ -z "${{ env.EC2_PUBLIC_IP }}" ]; then
-            echo "No public IP found. Exiting."
-            exit 1
-          fi
-          ssh -o BatchMode=yes -o ConnectTimeout=5 -i private_key.pem ubuntu@${{ env.EC2_PUBLIC_IP }} "echo SSH connection successful"
 
       - name: SSH into EC2 and deploy
         run: |
