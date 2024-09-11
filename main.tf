@@ -2,8 +2,8 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_security_group" "allow_all" {
-  name        = "allow_all"
+resource "aws_security_group" "terraform" {
+  name        = "terraform"
   description = "Allow all inbound and outbound traffic"
 
   ingress {
@@ -26,7 +26,7 @@ resource "aws_instance" "react_app" {
   instance_type = "t2.micro"
 
   key_name = "terraform"
-  security_groups = [aws_security_group.allow_all.name] 
+  security_groups = [aws_security_group.terraform] 
 
   tags = {
     Name = "ReactAppInstance"
