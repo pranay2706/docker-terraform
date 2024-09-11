@@ -33,7 +33,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/reacts-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/reacts-app:${{ env.VERSION }}
+          tags: 
             ${{ secrets.DOCKER_USERNAME }}/reacts-app:${{ env.BUILD_NUMBER }}
