@@ -26,7 +26,7 @@ resource "aws_instance" "react_app" {
   instance_type = "t2.micro"
 
   key_name = "terraform"
-  security_groups = [aws_security_group.terraform] 
+  security_groups = [aws_security_group.allow_all.name] 
 
   tags = {
     Name = "ReactAppInstance"
