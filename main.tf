@@ -29,7 +29,7 @@ resource "aws_instance" "react_app" {
 
   key_name = "terraform" 
 
-  security_groups = [aws_security_group.allow_all.name]
+  security_groups = [aws_security_group.allow_http_ssh.name]
 
   tags = {
     Name = "ReactAppInstance"
